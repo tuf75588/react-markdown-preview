@@ -1,43 +1,21 @@
 import React from "react";
-import marked from "marked";
-class App extends React.Component {
-  state = {
-    content: "# Type some markdown here!"
-  };
-  rawMarkup = () => {
-    marked.setOptions({
-      renderer: new marked.Renderer(),
-      gfm: true,
-      tables: true,
-      breaks: false,
-      pedantic: false,
-      sanitize: true,
-      smartLists: true,
-      smartypants: false
-    });
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
-    let rawMarkup = marked(this.state.content, { sanitize: true });
-    return {
-      __html: rawMarkup
-    };
-  };
-  handleMarkDownChange = (event) => {
-    this.setState({ content: event.target.value });
-  };
+import Post from "./components/Post";
+import List from "./components/List";
+
+import Home from "./components/Home";
+class App extends React.Component {
   render() {
     return (
-      <React.Fragment>
-        <h1 className='header'>React Markdown Previewer</h1>
-        <div className='container'>
-          <div className='markdown-editor'>
-            <textarea
-              defaultValue={this.state.content}
-              onChange={this.handleMarkDownChange}
-            />
-          </div>
-          <div className='output' dangerouslySetInnerHTML={this.rawMarkup()} />
-        </div>
-      </React.Fragment>
+      <div className='container'>
+        <Router>
+          <Switch>
+            <Route exact path='/' component={Home} />
+            <Route path='/post/:postId' component={Post} />
+          </Switch>
+        </Router>
+      </div>
     );
   }
 }
