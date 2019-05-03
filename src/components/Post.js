@@ -11,37 +11,58 @@ class Post extends React.Component {
     content: ""
   };
   componentDidMount() {
-    console.log(this.postFBRef);
+    this.postFBRef.on("value", (snapshot) => {
+      if (!snapshot.val()) return;
+      this.titleRef.current &&
+        (this.titleRef.current.value = snapshot.val().title);
+      this.bodyRef.current &&
+        (this.bodyRef.current.value = snapshot.val().body);
+      this.setState(() => ({
+        content: snapshot.val().body
+      }));
+    });
   }
+  handleChange = () => {
+    this.postFBRef.set({
+      title: this.titleRef.current.value,
+      body: this.bodyRef.current.value
+    });
+  };
   render() {
     return (
-      <div>
-        <nav>
-          <Link to='/'>Home</Link>
-        </nav>
-        <form action='' className='rows'>
-          <div className='form-group'>
-            <label htmlFor='exampleFormControlTextarea1'>
-              Example textarea
-            </label>
-            <textarea
-              className='form-control'
-              id='exampleFormControlTextarea1'
-              rows='3'
+      <>
+        <div className='row'>
+          <div className='col col-sm-12'>
+            <Link to='/'>Home</Link>
+          </div>
+          <div className='col col-sm-12'>
+            <input
+              type='text'
+              className='post-title-input'
+              placeholder='Post Title'
+              ref={this.titleRef}
+              onChange={this.handleChange}
             />
           </div>
-          <div className='form-group'>
-            <label htmlFor='exampleFormControlTextarea1'>
-              Example textarea
-            </label>
+        </div>
+        <div className='row'>
+          <div className='col col-sm-6'>
             <textarea
               className='form-control'
-              id='exampleFormControlTextarea1'
-              rows='3'
+              ref={this.bodyRef}
+              onChange={this.handleChange}
+              rows={30}
+              type='text'
             />
           </div>
-        </form>
-      </div>
+          <div className='col col-sm-6'>
+            <ReactMarkdown
+              source={this.state.content}
+              className='markdown-preview'
+            />
+          </div>
+        </div>
+      </>
     );
   }
 }

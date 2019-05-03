@@ -5,8 +5,7 @@ import db from "../firebase";
 class Home extends React.Component {
   state = {
     title: "",
-    posts: [],
-    error: ""
+    posts: []
   };
   componentDidMount() {
     db.ref("/posts").on("value", (snapshot) => {
@@ -17,29 +16,32 @@ class Home extends React.Component {
       this.setState({ posts });
     });
   }
+  componentWillUnmount() {
+    this.setState({ title: "" });
+  }
   handleSubmit = (event) => {
     event.preventDefault();
 
-    const id = uuidv4();
+    const newId = uuidv4();
     const { title } = this.state;
 
     if (title === "") return;
-    db.ref(`/post/${id}`)
-      .set({ title, body: "", id })
+    db.ref(`/posts/${newId}`)
+      .set({ title, body: "" })
       .then((data) => {
-        this.props.history.push(`/post/${id}`);
-      })
-      .catch((err) => {
-        this.setState(() => ({
-          error: err
-        }));
+        this.props.history.push(`/post/${newId}`);
       });
   };
   handleChange = (event) => {
     const { name, value } = event.target;
-    this.setState(() => ({
-      [name]: value
-    }));
+    this.setState({ [name]: value });
+  };
+  handleDelete = (key) => {
+    // find our db reference
+    const refKey = db.ref(`/posts/${key}`);
+    refKey.remove().then(() => {
+      console.log("remove succeeded");
+    });
   };
   render() {
     return (
@@ -67,7 +69,11 @@ class Home extends React.Component {
           Posts
         </h2>
         {this.state.posts.map((post) => (
-          <List post={post} key={post.key} />
+          <List
+            post={post}
+            key={post.key}
+            onDelete={() => this.handleDelete(post.key)}
+          />
         ))}
       </div>
     );

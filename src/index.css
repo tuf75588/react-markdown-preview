@@ -16,7 +16,7 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
-a {
+a:hover {
   text-decoration: none;
 }
 ul {
@@ -24,4 +24,34 @@ ul {
 }
 li {
   list-style-type: none;
+}
+.post-title-input {
+  width: 100%;
+  border: 0.5px solid mistyrose;
+  border-radius: 3px;
+  outline: none;
+  font-size: 2em;
+  text-align: center;
+  margin: 35px auto;
+}
+.post-title-input:focus {
+  border-bottom: 1px solid #000;
+}
+.markdown-preview {
+  height: 100%;
+  border: 1px solid black;
+  padding: 10px;
+  border-radius: 3px;
+}
+.markdown-preview img {
+  max-width: 100%;
+}
+.post-link {
+  display: flex;
+  width: 100%;
+  align-items: center;
+}
+.delete {
+  margin: 0 0 0 auto;
+  cursor: pointer;
 }
